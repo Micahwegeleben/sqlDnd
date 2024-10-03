@@ -1,55 +1,106 @@
--- Create a database for the Rebel Alliance
-
-DROP DATABASE IF EXISTS rebel_alliance;
-CREATE DATABASE rebel_alliance;
-USE rebel_alliance;
-
--- Create a table for members
-CREATE TABLE members (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
-    species VARCHAR(50),
-    `rank` VARCHAR(50),
-    home_planet VARCHAR(50)
+-- Users Table: Store login credentials and basic user information
+CREATE TABLE Users (
+    user_id INT PRIMARY KEY AUTO_INCREMENT,
+    username VARCHAR(100) UNIQUE NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE skills (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    member_id INT,
-	skill VARCHAR(100) NOT NULL
+-- Campaigns Table: Store campaign data
+CREATE TABLE Campaigns (
+    campaign_id INT PRIMARY KEY AUTO_INCREMENT,
+    campaign_name VARCHAR(255) NOT NULL,
+    description TEXT,
+    created_by INT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (created_by) REFERENCES Users(user_id)
 );
 
--- Insert sample members into the table
-INSERT INTO members (name, species, `rank`, home_planet) VALUES
-('Mon Mothma', 'Human', 'Leader', 'Chandrila'),
-('Leia Organa', 'Human', 'Princess', 'Alderaan'),
-('Han Solo', 'Human', 'Captain', 'Corellia'),
-('Luke Skywalker', 'Human', 'Jedi Knight', 'Tatooine'),
-('Chewbacca', 'Wookiee', 'Co-pilot', 'Kashyyyk'),
-('Lando Calrissian', 'Human', 'General', 'Socorro'),
-('Admiral Ackbar', 'Mon Calamari', 'Admiral', 'Mon Cala');
+-- CampaignOwnerships Junction Table: Manages ownership of campaigns by users
+CREATE TABLE CampaignOwnerships (
+    ownership_id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT,
+    campaign_id INT,
+    FOREIGN KEY (user_id) REFERENCES Users(user_id),
+    FOREIGN KEY (campaign_id) REFERENCES Campaigns(campaign_id),
+    UNIQUE(user_id, campaign_id)
+);
 
-INSERT INTO skills (member_id, skill) VALUES
-(1, 'Diplomacy'),
-(1, 'Leadership'),
-(2, 'Combat'),
-(2, 'Strategy'),
-(2, 'Diplomacy'),
-(3, 'Piloting'),
-(3, 'Smuggling'),
-(3, 'Negotiation'),
-(4, 'Force abilities'),
-(4, 'Lightsaber combat'),
-(5, 'Strength'),
-(5, 'Mechanics'),
-(5, 'Pilot'),
-(6, 'Gambling'),
-(6, 'Diplomacy'),
-(6, 'Pilot'),
-(7, 'Naval tactics'),
-(7, 'Strategy');
+-- CampaignParticipations Junction Table: Manages which characters are part of which campaigns
+CREATE TABLE CampaignParticipations (
+    participation_id INT PRIMARY KEY AUTO_INCREMENT,
+    character_id INT,
+    campaign_id INT,
+    FOREIGN KEY (character_id) REFERENCES Characters(character_id),
+    FOREIGN KEY (campaign_id) REFERENCES Campaigns(campaign_id),
+    UNIQUE(character_id, campaign_id)
+);
 
--- Query to retrieve all members
--- SELECT * FROM members;
--- SELECT * FROM skills;
-SELECT * FROM members JOIN skills ON members.id = skills.member_id;
+-- Characters Table: Store DnD character details
+CREATE TABLE Characters (
+    character_id INT PRIMARY KEY AUTO_INCREMENT,
+    character_name VARCHAR(255) NOT NULL,
+    age INT,
+    backstory TEXT,
+    country_id INT,
+    FOREIGN KEY (country_id) REFERENCES Countries(country_id)
+);
+
+-- Countries Table: Store list of countries
+CREATE TABLE Countries (
+    country_id INT PRIMARY KEY AUTO_INCREMENT,
+    country_name VARCHAR(255) NOT NULL UNIQUE
+);
+
+-- Citizenship Junction Table: Manages the many-to-one relationship between characters and countries
+CREATE TABLE Citizenship (
+    citizenship_id INT PRIMARY KEY AUTO_INCREMENT,
+    character_id INT,
+    country_id INT,
+    FOREIGN KEY (character_id) REFERENCES Characters(character_id),
+    FOREIGN KEY (country_id) REFERENCES Countries(country_id),
+    UNIQUE(character_id, country_id)
+);
+
+-- MagicTypes Table: Store list of magic types
+CREATE TABLE MagicTypes (
+    magic_type_id INT PRIMARY KEY AUTO_INCREMENT,
+    magic_name VARCHAR(255) UNIQUE NOT NULL
+);
+
+-- MagicTrainings Junction Table: Manages many-to-many relationships between characters and magic types
+CREATE TABLE MagicTrainings (
+    training_id INT PRIMARY KEY AUTO_INCREMENT,
+    character_id INT,
+    magic_type_id INT,
+    FOREIGN KEY (character_id) REFERENCES Characters(character_id),
+    FOREIGN KEY (magic_type_id) REFERENCES MagicTypes(magic_type_id),
+    UNIQUE(character_id, magic_type_id)
+);
+
+-- Relationships Junction Table: Manages family relationships between characters
+CREATE TABLE Relationships (
+    relationship_id INT PRIMARY KEY AUTO_INCREMENT,
+    character_id INT,
+    relative_id INT,
+    relationship_type VARCHAR(100),  -- E.g., 'parent', 'sibling', 'spouse'
+    FOREIGN KEY (character_id) REFERENCES Characters(character_id),
+    FOREIGN KEY (relative_id) REFERENCES Characters(character_id),
+    UNIQUE(character_id, relative_id)
+);
+
+-- Backstories Table: Store detailed backstories for characters
+CREATE TABLE Backstories (
+    backstory_id INT PRIMARY KEY AUTO_INCREMENT,
+    character_id INT UNIQUE,
+    backstory TEXT,
+    FOREIGN KEY (character_id) REFERENCES Characters(character_id)
+);
+
+-- Indexes for Optimization (optional but recommended)
+CREATE INDEX idx_user_campaigns ON CampaignOwnerships (user_id, campaign_id);
+CREATE INDEX idx_campaign_participation ON CampaignParticipations (character_id, campaign_id);
+CREATE INDEX idx_character_country ON Citizenship (character_id, country_id);
+CREATE INDEX idx_character_magic ON MagicTrainings (character_id, magic_type_id);
+CREATE INDEX idx_character_relationship ON Relationships (character_id, relative_id);
