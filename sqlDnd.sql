@@ -140,7 +140,7 @@ VALUES
 INSERT INTO Characters (character_name, age, country_id)
 VALUES
     ('Elenai Cherra', 22, 11), -- 1
-    ('Jake Flynn', 23, 1), -- 2
+    ('Jak Flynn', 23, 1), -- 2
     ('Hao Minori', 32, 7), -- 3
     ('Rin Tol Mayus', 29, 1), -- 4
     ('Mizu Hidora', 35, 10); -- 5
@@ -162,11 +162,8 @@ INSERT INTO Relationships (character_id, relative_id, relation_type_id)
 VALUES
 	(1, 2, 2),
 	(3, 4, 3),
-	(4, 3, 3),
 	(4, 5, 3),
-	(3, 5, 3),
-	(5, 3, 3),
-	(5, 4, 3);
+	(3, 5, 3);
 
 -- Indexes for optimization
 CREATE INDEX idx_user_campaigns ON CampaignOwnerships (user_id, campaign_id);
@@ -175,13 +172,4 @@ CREATE INDEX idx_character_country ON Characters (country_id);
 CREATE INDEX idx_character_magic ON MagicTrainings (character_id, magic_type_id);
 CREATE INDEX idx_character_relationship ON Relationships (character_id, relative_id);
 
-
--- DELETE FROM MagicTrainings WHERE character_id = 5;
-
--- UPDATE MagicTrainings SET magic_type_id = 5 WHERE magic_type_id = 1;
-
-SELECT Characters.character_name, Characters.age, MagicTypes.magic_name 
-FROM Characters
-JOIN MagicTrainings ON Characters.character_id = MagicTrainings.character_id
-JOIN MagicTypes ON MagicTrainings.magic_type_id = MagicTypes.magic_type_id;
 
