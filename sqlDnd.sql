@@ -75,7 +75,7 @@ CREATE TABLE MagicTypes (
 
 -- Magic Types Table: Store list of magic types
 CREATE TABLE RelationTypes (
-    relation_type_id INT PRIMARY KEY AUTO_INCREMENT,
+    type_id INT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(255) UNIQUE NOT NULL
 );
 
@@ -94,10 +94,10 @@ CREATE TABLE Relationships (
     relationship_id INT PRIMARY KEY AUTO_INCREMENT,
     character_id INT,
     relative_id INT,
-    relation_type_id INT,  -- Refers to the RelationTypes table
+    type_id INT,  -- Refers to the RelationTypes table
     FOREIGN KEY (character_id) REFERENCES Characters(character_id),
     FOREIGN KEY (relative_id) REFERENCES Characters(character_id),
-    FOREIGN KEY (relation_type_id) REFERENCES RelationTypes(relation_type_id),  -- New reference
+    FOREIGN KEY (type_id) REFERENCES RelationTypes(type_id),  -- New reference
     UNIQUE(character_id, relative_id)
 );
 
@@ -159,7 +159,7 @@ VALUES
 	(5, 2),
 	(5, 8);
     
-INSERT INTO Relationships (character_id, relative_id, relation_type_id)
+INSERT INTO Relationships (character_id, relative_id, type_id)
 VALUES
 	(1, 2, 2),
 	(3, 4, 3),
