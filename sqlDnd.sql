@@ -35,9 +35,9 @@ CREATE TABLE Campaigns (
     campaign_id INT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(255) NOT NULL,
     description TEXT,
-    created_by INT, 
+    user_id INT, 
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (created_by) REFERENCES Users(user_id)
+    FOREIGN KEY (user_id) REFERENCES Users(user_id)
 );
 
 CREATE TABLE CampaignOwnerships (
