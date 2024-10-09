@@ -50,7 +50,7 @@ CREATE TABLE CampaignOwnerships (
 );
 
 CREATE TABLE CampaignParticipations (
-    participation_id INT PRIMARY KEY AUTO_INCREMENT,
+    campaignparticipation_id INT PRIMARY KEY AUTO_INCREMENT,
     character_id INT,
     campaign_id INT,
     FOREIGN KEY (character_id) REFERENCES Characters(character_id),
@@ -59,7 +59,7 @@ CREATE TABLE CampaignParticipations (
 );
 
 CREATE TABLE MagicTypes (
-    type_id INT PRIMARY KEY AUTO_INCREMENT,
+    magictype_id INT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(255) UNIQUE NOT NULL
 );
 
