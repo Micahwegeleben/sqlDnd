@@ -75,7 +75,7 @@ CREATE TABLE MagicTypes (
 
 -- Magic Types Table: Store list of magic types
 CREATE TABLE RelationTypes (
-    type_id INT PRIMARY KEY AUTO_INCREMENT,
+    relationtype_id INT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(255) UNIQUE NOT NULL
 );
 
@@ -83,10 +83,10 @@ CREATE TABLE RelationTypes (
 CREATE TABLE MagicTrainings (
     training_id INT PRIMARY KEY AUTO_INCREMENT,
     character_id INT,
-    type_id INT,
+    magictype_id INT,
     FOREIGN KEY (character_id) REFERENCES Characters(character_id),
-    FOREIGN KEY (type_id) REFERENCES MagicTypes(type_id),
-    UNIQUE(character_id, type_id)
+    FOREIGN KEY (magictype_id) REFERENCES MagicTypes(magictype_id),
+    UNIQUE(character_id, magictype_id)
 );
 
 -- Relationships Table: Manages family relationships between characters
@@ -94,10 +94,10 @@ CREATE TABLE Relationships (
     relationship_id INT PRIMARY KEY AUTO_INCREMENT,
     character_id INT,
     relative_id INT,
-    type_id INT,  -- Refers to the RelationTypes table
+    relationtype_id INT,  -- Refers to the RelationTypes table
     FOREIGN KEY (character_id) REFERENCES Characters(character_id),
     FOREIGN KEY (relative_id) REFERENCES Characters(character_id),
-    FOREIGN KEY (type_id) REFERENCES RelationTypes(type_id),  -- New reference
+    FOREIGN KEY (relationtype_id) REFERENCES RelationTypes(relationtype_id),  -- New reference
     UNIQUE(character_id, relative_id)
 );
 
@@ -147,7 +147,7 @@ VALUES
     ('Mizu Hidora', 35, 10); -- 5
     
     
-INSERT INTO MagicTrainings (character_id, type_id)
+INSERT INTO MagicTrainings (character_id, magictype_id)
 VALUES
 	(1, 5),
 	(1, 10),
@@ -159,7 +159,7 @@ VALUES
 	(5, 2),
 	(5, 8);
     
-INSERT INTO Relationships (character_id, relative_id, type_id)
+INSERT INTO Relationships (character_id, relative_id, relationtype_id)
 VALUES
 	(1, 2, 2),
 	(3, 4, 3),
@@ -170,7 +170,7 @@ VALUES
 CREATE INDEX idx_user_campaigns ON CampaignOwnerships (user_id, campaign_id);
 CREATE INDEX idx_campaign_participation ON CampaignParticipations (character_id, campaign_id);
 CREATE INDEX idx_character_country ON Characters (country_id);
-CREATE INDEX idx_character_magic ON MagicTrainings (character_id, type_id);
+CREATE INDEX idx_character_magic ON MagicTrainings (character_id, magictype_id);
 CREATE INDEX idx_character_relationship ON Relationships (character_id, relative_id);
 
 
