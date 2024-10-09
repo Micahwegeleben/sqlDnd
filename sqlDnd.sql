@@ -1,4 +1,3 @@
--- Drop database if it exists
 DROP DATABASE IF EXISTS sqlDnd;
 CREATE DATABASE sqlDnd;
 USE sqlDnd;
@@ -36,7 +35,7 @@ CREATE TABLE Campaigns (
     campaign_id INT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(255) NOT NULL,
     description TEXT,
-    created_by INT,  -- Foreign key to Users table
+    created_by INT, 
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (created_by) REFERENCES Users(user_id)
 );
