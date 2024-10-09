@@ -15,13 +15,13 @@ CREATE TABLE Users (
 -- Countries Table: Store list of countries
 CREATE TABLE Countries (
     country_id INT PRIMARY KEY AUTO_INCREMENT,
-    country_name VARCHAR(255) NOT NULL UNIQUE
+    name VARCHAR(255) NOT NULL UNIQUE
 );
 
 -- Characters Table: Store DnD character details
 CREATE TABLE Characters (
     character_id INT PRIMARY KEY AUTO_INCREMENT,
-    character_name VARCHAR(255) NOT NULL,
+    name VARCHAR(255) NOT NULL,
     age INT,
     country_id INT,  -- Foreign key to Countries table
     FOREIGN KEY (country_id) REFERENCES Countries(country_id)
@@ -38,7 +38,7 @@ CREATE TABLE Backstories (
 -- Campaigns Table: Store campaign data
 CREATE TABLE Campaigns (
     campaign_id INT PRIMARY KEY AUTO_INCREMENT,
-    campaign_name VARCHAR(255) NOT NULL,
+    name VARCHAR(255) NOT NULL,
     description TEXT,
     created_by INT,  -- Foreign key to Users table
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -67,25 +67,25 @@ CREATE TABLE CampaignParticipations (
 
 -- Magic Types Table: Store list of magic types
 CREATE TABLE MagicTypes (
-    magic_type_id INT PRIMARY KEY AUTO_INCREMENT,
-    magic_name VARCHAR(255) UNIQUE NOT NULL
+    type_id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(255) UNIQUE NOT NULL
 );
 
 
 -- Magic Types Table: Store list of magic types
 CREATE TABLE RelationTypes (
     relation_type_id INT PRIMARY KEY AUTO_INCREMENT,
-    relation_name VARCHAR(255) UNIQUE NOT NULL
+    name VARCHAR(255) UNIQUE NOT NULL
 );
 
 -- Magic Trainings Table: Manages many-to-many relationships between characters and magic types
 CREATE TABLE MagicTrainings (
     training_id INT PRIMARY KEY AUTO_INCREMENT,
     character_id INT,
-    magic_type_id INT,
+    type_id INT,
     FOREIGN KEY (character_id) REFERENCES Characters(character_id),
-    FOREIGN KEY (magic_type_id) REFERENCES MagicTypes(magic_type_id),
-    UNIQUE(character_id, magic_type_id)
+    FOREIGN KEY (type_id) REFERENCES MagicTypes(type_id),
+    UNIQUE(character_id, type_id)
 );
 
 -- Relationships Table: Manages family relationships between characters
@@ -101,14 +101,14 @@ CREATE TABLE Relationships (
 );
 
 
-INSERT INTO RelationTypes (relation_name)
+INSERT INTO RelationTypes (name)
 VALUES
     ('Sibling'), -- 1
     ('Romantic Partner'), -- 2
     ('Friend'); -- 3
     
     
-INSERT INTO MagicTypes (magic_name)
+INSERT INTO MagicTypes (name)
 VALUES
     ('Fire'), -- 1
     ('Water'), -- 2
@@ -123,7 +123,7 @@ VALUES
     ('Lightning'); -- 11
     
 -- Inserting characters into the Characters table
-INSERT INTO Countries (country_name)
+INSERT INTO Countries (name)
 VALUES
     ('Kaentos'), -- 1
     ('Kholdon'),-- 2
@@ -137,7 +137,7 @@ VALUES
     ('Shioland'), -- 10
     ('Mushando'); -- 11
 
-INSERT INTO Characters (character_name, age, country_id)
+INSERT INTO Characters (name, age, country_id)
 VALUES
     ('Elenai Cherra', 22, 11), -- 1
     ('Jak Flynn', 23, 1), -- 2
@@ -146,7 +146,7 @@ VALUES
     ('Mizu Hidora', 35, 10); -- 5
     
     
-INSERT INTO MagicTrainings (character_id, magic_type_id)
+INSERT INTO MagicTrainings (character_id, type_id)
 VALUES
 	(1, 5),
 	(1, 10),
@@ -169,7 +169,7 @@ VALUES
 CREATE INDEX idx_user_campaigns ON CampaignOwnerships (user_id, campaign_id);
 CREATE INDEX idx_campaign_participation ON CampaignParticipations (character_id, campaign_id);
 CREATE INDEX idx_character_country ON Characters (country_id);
-CREATE INDEX idx_character_magic ON MagicTrainings (character_id, magic_type_id);
+CREATE INDEX idx_character_magic ON MagicTrainings (character_id, type_id);
 CREATE INDEX idx_character_relationship ON Relationships (character_id, relative_id);
 
 
