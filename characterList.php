@@ -1,23 +1,13 @@
 <?php
 // Database connection
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "sqlDnd";
-
-// Create connection
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-// Check connection
-if ($conn->connect_error) {
-	die("Connection failed: " . $conn->connect_error);
-}
+include 'db_connection.php';
 
 // Handle deletion of a character
 if (isset($_POST['delete'])) {
 	$character_id = $_POST['character_id'];
 
 	// Delete from MagicTrainings table first (because of foreign key constraint)
+	$conn->query("DELETE FROM Relationships WHERE character_id = $character_id");
 	$conn->query("DELETE FROM MagicTrainings WHERE character_id = $character_id");
 
 	// Then delete from Characters table
@@ -89,7 +79,7 @@ $charactersResult = $conn->query($charactersQuery);
 
 	<a href="index.php">Add a New Character</a>
 
-</body>
+</body><?php include 'footer.php'; ?>
 
 </html>
 

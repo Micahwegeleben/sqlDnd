@@ -1,17 +1,6 @@
 <?php
 // Database connection
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "sqlDnd";
-
-// Create connection
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+include 'db_connection.php';
 
 // Fetch countries for the dropdown
 $countryQuery = "SELECT country_id, name FROM Countries";
@@ -98,7 +87,7 @@ $conn->close();
     <input type="submit" value="Add Character">
 </form>
 <br>
-<a href="characterList.php">View Character List</a>
+<?php include 'footer.php'; ?>
 
 </body>
 </html>

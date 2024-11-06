@@ -58,6 +58,26 @@ CREATE TABLE CampaignParticipations (
     UNIQUE(character_id, campaign_id)
 );
 
+CREATE TABLE Episodes (
+    episode_id INT PRIMARY KEY AUTO_INCREMENT,
+    campaign_id INT,
+    episode_name VARCHAR(255) NOT NULL, -- Added column for episode name
+    episode_date DATE NOT NULL,
+    episode_description TEXT,
+    FOREIGN KEY (campaign_id) REFERENCES Campaigns(campaign_id)
+);
+
+
+-- Join table for many-to-many relationship between Episodes and Characters
+CREATE TABLE EpisodeParticipations (
+    participation_id INT PRIMARY KEY AUTO_INCREMENT,
+    episode_id INT,
+    character_id INT,
+    FOREIGN KEY (episode_id) REFERENCES Episodes(episode_id),
+    FOREIGN KEY (character_id) REFERENCES Characters(character_id),
+    UNIQUE (episode_id, character_id) -- Ensure no duplicate entries for an episode-character pairing
+);
+
 CREATE TABLE MagicTypes (
     magictype_id INT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(255) UNIQUE NOT NULL
@@ -149,10 +169,16 @@ VALUES
 	(4, 5, 3),
 	(3, 5, 3);
 
+
+
 CREATE INDEX idx_user_campaigns ON CampaignOwnerships (user_id, campaign_id);
 CREATE INDEX idx_campaign_participation ON CampaignParticipations (character_id, campaign_id);
 CREATE INDEX idx_character_country ON Characters (country_id);
 CREATE INDEX idx_character_magic ON MagicTrainings (character_id, magictype_id);
 CREATE INDEX idx_character_relationship ON Relationships (character_id, relative_id);
+CREATE INDEX idx_episode_campaign ON Episodes (campaign_id);
+CREATE INDEX idx_episode_character ON EpisodeParticipations (episode_id, character_id);
+
+
 
 
