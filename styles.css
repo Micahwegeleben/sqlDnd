@@ -1,0 +1,41 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: rgb(116, 122, 128);
+}
+
+.container {
+    max-width: 1200px;
+    min-width: 500px;
+    margin: 0 auto;
+    padding: 20px;
+    flex: 1;
+    background-color: rgb(247, 244, 240);
+    border: 2px solid rgb(170, 170, 159);
+    /* This makes the container take up the remaining space */
+}
+
+footer {
+    text-align: center;
+    padding: 10px;
+    background-color: #333;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+}
+
+footer a {
+    color: lightslategray;
+    text-decoration: none;
+}
+
+footer a:visited,
+a:hover,
+a:active {
+    color: lightblue;
+    text-decoration: none;
+}

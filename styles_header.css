@@ -1,0 +1,55 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+.site-name a {
+    color: white;
+    text-decoration: none;
+}
+
+.site-name a:visited,
+a:hover,
+a:active {
+    color: white;
+    text-decoration: none;
+}
+
+.header-container {
+    background-color: #333;
+    color: white;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.site-name {
+    flex: 1;
+}
+
+.site-name a {
+    font-size: 1.5em;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+}
+
+.user-info span {
+    margin-right: 20px;
+}
+
+.button {
+    color: white;
+    text-decoration: none;
+    background-color: #007BFF;
+    padding: 10px 15px;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.button:hover {
+    background-color: #0056b3;
+}
